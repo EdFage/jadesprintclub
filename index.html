@@ -71,8 +71,13 @@
     .headline + .headline { border-top:2px solid var(--ink); }
     .headline:nth-child(2) { background:#ffbbdd; }
     .headline::before { content:'★'; margin-right:8px; }
-    .news-label { font-size:11px; font-weight:bold; margin:0 0 12px; }
-    .news-controls { display:flex; justify-content:space-between; align-items:center; gap:8px; margin:8px 0 22px; }
+    .news-label { font-size:clamp(23px,6.5vw,30px); line-height:1.2; text-align:center; font-weight:bold; margin:0 0 18px; text-shadow:2px 2px 0 var(--pink); }
+    .news-status { text-align:center; font-size:12px; font-weight:bold; margin:16px 0 0; }
+    .news-pages { display:flex; justify-content:center; align-items:center; gap:4px; width:100%; }
+    .news-dot { display:grid; place-items:center; width:44px; height:44px; }
+    .news-dot::before { content:''; width:10px; height:10px; border:2px solid var(--ink); background:var(--paper); border-radius:50%; }
+    .news-dot[aria-current="true"]::before { background:#b82677; transform:scale(1.25); }
+    .news-controls { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px; margin:4px 0 22px; }
     .news-controls span { font-size:11px; }
     .news-controls button { padding:10px 4px; min-height:44px; background:none; border:0; text-decoration:underline; font-size:12px; }
     .girlfriend { background:var(--pink); text-align:center; padding:24px 12px 20px; transform:rotate(-1deg); }
@@ -157,7 +162,7 @@
         <h2 class="more"><a href="#important"><span class="scroll-label">scroll for more</span>EXTREMELY<br>IMPORTANT STUFF<span class="down-arrow" aria-hidden="true">↓</span></a></h2>
       </section>
       <section class="details" id="important" aria-label="Extremely important Jade information">
-        <p class="news-label" id="news-title">★ THE JADE NEWS NETWORK ★</p>
+        <h2 class="news-label" id="news-title">★ THE JADE ★<br>NEWS NETWORK</h2>
         <div class="news-board pixel-box" id="news-board" role="region" aria-labelledby="news-title">
           <ul class="news-batch" aria-label="Headlines 1 to 3">
             <li class="headline">BREAKING NEWS: LOCAL GIRL EXTREMELY CUTE</li>
@@ -175,8 +180,14 @@
             <li class="headline">NATION BRACES FOR ANOTHER EXCELLENT JADE OUTFIT</li>
           </ul>
         </div>
+        <p class="news-status" id="news-status" hidden>Next headlines in 8s ↓</p>
         <div class="news-controls" id="news-controls" hidden>
-          <span id="news-page">1 / 3</span>
+          <div class="news-pages" role="group" aria-label="Choose a headline page">
+            <button class="news-dot" type="button" data-news-page="0" aria-label="Show headlines 1 to 3" aria-current="true"></button>
+            <button class="news-dot" type="button" data-news-page="1" aria-label="Show headlines 4 to 6" aria-current="false"></button>
+            <button class="news-dot" type="button" data-news-page="2" aria-label="Show headlines 7 to 9" aria-current="false"></button>
+            <span id="news-page">1 / 3</span>
+          </div>
           <button type="button" id="pause-news" aria-pressed="false">pause news Ⅱ</button>
           <button type="button" id="next-news">next 3 →</button>
         </div>
@@ -214,21 +225,38 @@
     let paused = motionPreference.matches;
     let inView = !('IntersectionObserver' in window);
     let rotationTimer;
+    let secondsRemaining = 8;
+    const newsStatus = document.getElementById('news-status');
+    const pageDots = Array.from(document.querySelectorAll('[data-news-page]'));
     function showBatch(index) {
       currentBatch = index % batches.length;
       batches.forEach((batch, i) => {
         batch.classList.toggle('is-current', i === currentBatch);
         batch.setAttribute('aria-hidden', String(i !== currentBatch));
       });
+      pageDots.forEach((dot, i) => dot.setAttribute('aria-current', String(i === currentBatch)));
       document.getElementById('news-page').textContent = (currentBatch + 1) + ' / ' + batches.length;
+    }
+    function updateNewsStatus() {
+      newsStatus.textContent = paused ? 'Paused · tap play or choose a page' :
+        (!inView || document.hidden) ? '3 pages · rotates every 8 seconds ↓' :
+        'Next headlines in ' + secondsRemaining + 's ↓';
+    }
+    function rotationTick() {
+      secondsRemaining -= 1;
+      if (secondsRemaining === 0) {
+        showBatch(currentBatch + 1);
+        secondsRemaining = 8;
+      }
+      updateNewsStatus();
+      rotationTimer = window.setTimeout(rotationTick, 1000);
     }
     function scheduleRotation() {
       window.clearTimeout(rotationTimer);
+      secondsRemaining = 8;
+      updateNewsStatus();
       if (paused || !inView || document.hidden) return;
-      rotationTimer = window.setTimeout(() => {
-        showBatch(currentBatch + 1);
-        scheduleRotation();
-      }, 8000);
+      rotationTimer = window.setTimeout(rotationTick, 1000);
     }
     function updatePauseButton() {
       pauseButton.setAttribute('aria-pressed', String(paused));
@@ -237,6 +265,11 @@
     showBatch(0);
     newsBoard.classList.add('is-rotating');
     document.getElementById('news-controls').hidden = false;
+    newsStatus.hidden = false;
+    pageDots.forEach((dot) => dot.addEventListener('click', () => {
+      showBatch(Number(dot.dataset.newsPage));
+      scheduleRotation();
+    }));
     updatePauseButton();
     pauseButton.addEventListener('click', () => {
       paused = !paused;
