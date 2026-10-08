@@ -62,17 +62,24 @@
     .more .scroll-label { display:block; font-size:16px; margin-bottom:8px; }
     .more .down-arrow { display:block; font-size:40px; margin-top:8px; color:#a32368; }
     .details { padding:24px 0 12px; scroll-margin-top:20px; }
-    .ticker-shell { background:var(--yellow); overflow:hidden; }
-    .ticker-shell + .ticker-shell { margin-top:12px; background:#ffbbdd; transform:rotate(-1deg); }
-    .ticker { display:flex; width:max-content; animation:news-scroll 32s linear infinite; padding:14px 0; }
-    .ticker-shell + .ticker-shell .ticker { animation-duration:28s; }
-    .ticker-group { display:flex; flex-shrink:0; white-space:nowrap; }
-    .headline { padding:0 22px; font-size:13px; font-weight:bold; }
-    .headline::before { content:'★'; margin-right:22px; }
-    @keyframes news-scroll { to { transform:translateX(-50%); } }
-    .news-reels.paused .ticker { animation-play-state:paused; }
-    .ticker-controls { display:flex; justify-content:space-between; align-items:center; font-size:10px; margin:6px 0 20px; }
-    .pause-news { padding:10px 4px; min-height:44px; background:none; border:0; text-decoration:underline; font-size:11px; }
+    .news-board { background:var(--yellow); overflow:hidden; }
+    .news-batch { list-style:none; margin:0; padding:0; }
+    .news-board.is-rotating { display:grid; }
+    .news-board.is-rotating .news-batch { grid-area:1 / 1; visibility:hidden; opacity:0; transform:translateY(8px); transition:opacity .18s ease,transform .18s ease; pointer-events:none; }
+    .news-board.is-rotating .news-batch.is-current { visibility:visible; opacity:1; transform:translateY(0); pointer-events:auto; }
+    .headline { padding:16px 17px; font-size:14px; line-height:1.45; font-weight:bold; overflow-wrap:break-word; }
+    .headline + .headline { border-top:2px solid var(--ink); }
+    .headline:nth-child(2) { background:#ffbbdd; }
+    .headline::before { content:'★'; margin-right:8px; }
+    .news-label { font-size:clamp(23px,6.5vw,30px); line-height:1.2; text-align:center; font-weight:bold; margin:0 0 18px; text-shadow:2px 2px 0 var(--pink); }
+    .news-status { text-align:center; font-size:12px; font-weight:bold; margin:16px 0 0; }
+    .news-pages { display:flex; justify-content:center; align-items:center; gap:4px; width:100%; }
+    .news-dot { display:grid; place-items:center; width:44px; height:44px; }
+    .news-dot::before { content:''; width:10px; height:10px; border:2px solid var(--ink); background:var(--paper); border-radius:50%; }
+    .news-dot[aria-current="true"]::before { background:#b82677; transform:scale(1.25); }
+    .news-controls { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px; margin:4px 0 22px; }
+    .news-controls span { font-size:11px; }
+    .news-controls button { padding:10px 4px; min-height:44px; background:none; border:0; text-decoration:underline; font-size:12px; }
     .girlfriend { background:var(--pink); text-align:center; padding:24px 12px 20px; transform:rotate(-1deg); }
     .eyebrow { font-size:17px; font-weight:bold; letter-spacing:1px; margin:0; }
     .girlfriend h2 { font-family:Impact,'Arial Black',sans-serif; font-size:55px; letter-spacing:2px; margin:10px 0 4px; }
@@ -96,7 +103,7 @@
     footer a { display:inline-block; padding:12px; }
     .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
     @media(min-width:700px) { main { padding-top:20px; }.hero { min-height:800px; }.intro { min-height:700px; }.domain { padding:14px 25px; } }
-    @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; }.ticker { animation:none; width:auto; }.ticker-group { display:block; white-space:normal; }.ticker-group[aria-hidden="true"] { display:none; }.headline { display:block; padding:10px 14px; }.headline::before { margin-right:10px; }.envelope-button .art { transition:none; } }
+    @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; }.news-board.is-rotating .news-batch { transition:none; transform:none; }.envelope-button .art { transition:none; } }
   </style>
 </head>
 <body>
@@ -155,27 +162,35 @@
         <h2 class="more"><a href="#important"><span class="scroll-label">scroll for more</span>EXTREMELY<br>IMPORTANT STUFF<span class="down-arrow" aria-hidden="true">↓</span></a></h2>
       </section>
       <section class="details" id="important" aria-label="Extremely important Jade information">
-        <div class="news-reels" id="ticker-shell">
-        <div class="ticker-shell pixel-box">
-          <div class="ticker" aria-hidden="true"><div class="ticker-group" id="headlines">
-            <span class="headline">BREAKING NEWS: LOCAL GIRL EXTREMELY CUTE</span>
-            <span class="headline">SIX-MONTH INVESTIGATION CONFIRMS: STILL FANCY YOU</span>
-            <span class="headline">BOYFRIEND DENIES WRITING ALL GUESTBOOK ENTRIES</span>
-            <span class="headline">SCIENTISTS UNABLE TO EXPLAIN HOW YOU KEEP GETTING CUTER</span>
-            <span class="headline">NATION BRACES FOR ANOTHER EXCELLENT JADE OUTFIT</span>
-          </div></div>
+        <h2 class="news-label" id="news-title">★ THE JADE ★<br>NEWS NETWORK</h2>
+        <div class="news-board pixel-box" id="news-board" role="region" aria-labelledby="news-title">
+          <ul class="news-batch" aria-label="Headlines 1 to 3">
+            <li class="headline">BREAKING NEWS: LOCAL GIRL EXTREMELY CUTE</li>
+            <li class="headline">AUTHORITIES DISCOVER WHATSAPP STICKER HOARD IN SOUTHWARK</li>
+            <li class="headline">SIX-MONTH INVESTIGATION CONFIRMS: STILL FANCY YOU</li>
+          </ul>
+          <ul class="news-batch" aria-label="Headlines 4 to 6">
+            <li class="headline">GIRLFRIEND OF THE MONTH WINS FOR SIXTH CONSECUTIVE MONTH</li>
+            <li class="headline">BOYFRIEND DENIES WRITING ALL GUESTBOOK ENTRIES</li>
+            <li class="headline">LOCAL COUPLE COMMUNICATE ENTIRELY THROUGH STICKERS</li>
+          </ul>
+          <ul class="news-batch" aria-label="Headlines 7 to 9">
+            <li class="headline">SCIENTISTS UNABLE TO EXPLAIN HOW YOU KEEP GETTING CUTER</li>
+            <li class="headline">LOCAL MAN BUYS DOMAIN; CLAIMS THIS COUNTS AS ROMANCE</li>
+            <li class="headline">NATION BRACES FOR ANOTHER EXCELLENT JADE OUTFIT</li>
+          </ul>
         </div>
-        <div class="ticker-shell pixel-box">
-          <div class="ticker" aria-hidden="true"><div class="ticker-group" id="headlines-two">
-            <span class="headline">AUTHORITIES DISCOVER WHATSAPP STICKER HOARD IN SOUTHWARK</span>
-            <span class="headline">GIRLFRIEND OF THE MONTH WINS FOR SIXTH CONSECUTIVE MONTH</span>
-            <span class="headline">LOCAL COUPLE COMMUNICATE ENTIRELY THROUGH STICKERS</span>
-            <span class="headline">LOCAL MAN BUYS DOMAIN; CLAIMS THIS COUNTS AS ROMANCE</span>
-          </div></div>
+        <p class="news-status" id="news-status" hidden>Next headlines in 8s ↓</p>
+        <div class="news-controls" id="news-controls" hidden>
+          <div class="news-pages" role="group" aria-label="Choose a headline page">
+            <button class="news-dot" type="button" data-news-page="0" aria-label="Show headlines 1 to 3" aria-current="true"></button>
+            <button class="news-dot" type="button" data-news-page="1" aria-label="Show headlines 4 to 6" aria-current="false"></button>
+            <button class="news-dot" type="button" data-news-page="2" aria-label="Show headlines 7 to 9" aria-current="false"></button>
+            <span id="news-page">1 / 3</span>
+          </div>
+          <button type="button" id="pause-news" aria-pressed="false">pause news Ⅱ</button>
+          <button type="button" id="next-news">next 3 →</button>
         </div>
-        </div>
-        <div class="ticker-controls"><span>THE JADE NEWS NETWORK</span><button class="pause-news" type="button" id="pause-news" aria-pressed="false" hidden>pause news Ⅱ</button></div>
-        <div class="sr-only" id="accessible-news"><h2>Jade news headlines</h2></div>
         <section class="girlfriend pixel-box" aria-labelledby="girlfriend-title"><p class="eyebrow" id="girlfriend-title">GIRLFRIEND OF THE MONTH</p><h2>JADE</h2><p>Competition cancelled.</p></section>
         <dl class="stats pixel-box"><dt>MONTHS FANCYING YOU</dt><dd>6</dd></dl>
         <section class="guestbook pixel-box" aria-labelledby="guestbook-title">
@@ -202,26 +217,83 @@
       envelope.setAttribute('aria-label', open ? 'Close your anniversary mail' : 'Open your anniversary mail');
       document.getElementById('love-note').hidden = !open;
     });
-    const newsList = document.createElement('ul');
-    for (const headlines of document.querySelectorAll('.ticker-group')) {
-      for (const headline of headlines.children) {
-        const item = document.createElement('li');
-        item.textContent = headline.textContent;
-        newsList.appendChild(item);
-      }
-      const duplicate = headlines.cloneNode(true);
-      duplicate.removeAttribute('id');
-      duplicate.setAttribute('aria-hidden', 'true');
-      headlines.parentElement.appendChild(duplicate);
-    }
-    document.getElementById('accessible-news').appendChild(newsList);
+    const newsBoard = document.getElementById('news-board');
+    const batches = Array.from(newsBoard.querySelectorAll('.news-batch'));
     const pauseButton = document.getElementById('pause-news');
-    pauseButton.hidden = false;
-    pauseButton.addEventListener('click', () => {
-      const paused = document.getElementById('ticker-shell').classList.toggle('paused');
+    const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let currentBatch = 0;
+    let paused = motionPreference.matches;
+    let inView = !('IntersectionObserver' in window);
+    let rotationTimer;
+    let secondsRemaining = 8;
+    const newsStatus = document.getElementById('news-status');
+    const pageDots = Array.from(document.querySelectorAll('[data-news-page]'));
+    function showBatch(index) {
+      currentBatch = index % batches.length;
+      batches.forEach((batch, i) => {
+        batch.classList.toggle('is-current', i === currentBatch);
+        batch.setAttribute('aria-hidden', String(i !== currentBatch));
+      });
+      pageDots.forEach((dot, i) => dot.setAttribute('aria-current', String(i === currentBatch)));
+      document.getElementById('news-page').textContent = (currentBatch + 1) + ' / ' + batches.length;
+    }
+    function updateNewsStatus() {
+      newsStatus.textContent = paused ? 'Paused · tap play or choose a page' :
+        (!inView || document.hidden) ? '3 pages · rotates every 8 seconds ↓' :
+        'Next headlines in ' + secondsRemaining + 's ↓';
+    }
+    function rotationTick() {
+      secondsRemaining -= 1;
+      if (secondsRemaining === 0) {
+        showBatch(currentBatch + 1);
+        secondsRemaining = 8;
+      }
+      updateNewsStatus();
+      rotationTimer = window.setTimeout(rotationTick, 1000);
+    }
+    function scheduleRotation() {
+      window.clearTimeout(rotationTimer);
+      secondsRemaining = 8;
+      updateNewsStatus();
+      if (paused || !inView || document.hidden) return;
+      rotationTimer = window.setTimeout(rotationTick, 1000);
+    }
+    function updatePauseButton() {
       pauseButton.setAttribute('aria-pressed', String(paused));
       pauseButton.textContent = paused ? 'play news ▷' : 'pause news Ⅱ';
+    }
+    showBatch(0);
+    newsBoard.classList.add('is-rotating');
+    document.getElementById('news-controls').hidden = false;
+    newsStatus.hidden = false;
+    pageDots.forEach((dot) => dot.addEventListener('click', () => {
+      showBatch(Number(dot.dataset.newsPage));
+      scheduleRotation();
+    }));
+    updatePauseButton();
+    pauseButton.addEventListener('click', () => {
+      paused = !paused;
+      updatePauseButton();
+      scheduleRotation();
     });
+    document.getElementById('next-news').addEventListener('click', () => {
+      showBatch(currentBatch + 1);
+      scheduleRotation();
+    });
+    document.addEventListener('visibilitychange', scheduleRotation);
+    motionPreference.addEventListener('change', (event) => {
+      paused = event.matches;
+      updatePauseButton();
+      scheduleRotation();
+    });
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        inView = entries[0].isIntersecting;
+        scheduleRotation();
+      }, { threshold: 0.25 });
+      observer.observe(newsBoard);
+    }
+    scheduleRotation();
   </script>
 </body>
 </html>
