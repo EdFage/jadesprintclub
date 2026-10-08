@@ -16,51 +16,70 @@
     a { color:inherit; }
     button:focus-visible,a:focus-visible { outline:3px dashed #86134f; outline-offset:6px; }
     .intro { position:relative; min-height:580px; height:100svh; padding:calc(32px + env(safe-area-inset-top)) 22px calc(28px + env(safe-area-inset-bottom)); background:var(--paper); display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; overflow:hidden; }
-    .intro-copy { max-width:520px; margin:auto 0; }
+    .intro-copy { position:relative; z-index:1; max-width:520px; margin:auto 0; }
     .intro-star { font-size:70px; color:#f86cbd; -webkit-text-stroke:2px var(--ink); text-shadow:3px 3px 0 var(--ink); display:block; margin-bottom:30px; }
     h1 { font-family:Georgia,serif; font-weight:900; font-size:clamp(36px,10vw,57px); line-height:1.12; letter-spacing:-1.8px; margin:0 0 25px; }
     h1 span { display:block; }
     .domain { display:inline-block; padding:12px 8px; border:var(--edge); background:var(--pink); box-shadow:5px 5px 0 var(--ink); font-weight:bold; font-size:clamp(17px,5.35vw,30px); letter-spacing:-1px; white-space:nowrap; }
     .swipe { min-height:48px; padding:14px; font-size:16px; text-decoration:none; font-weight:bold; }
-    .spark { position:absolute; font-size:24px; color:#e6b7f1; pointer-events:none; }
-    .spark.one { top:16%; left:12%; color:#ffadd9; }.spark.two { top:22%; right:14%; }.spark.three { bottom:20%; right:12%; color:#ffadd9; }
+    .confetti { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+    .confetti span { position:absolute; color:#ef77b5; font-size:28px; -webkit-text-stroke:1px var(--ink); text-shadow:2px 2px 0 #ffffffaa; transform:rotate(var(--tilt,0deg)); }
+    .confetti span:nth-child(3n) { color:#c295e8; }
+    .confetti span:nth-child(4n) { color:var(--yellow); }
+    .confetti .a { top:8%; left:8%; font-size:35px; --tilt:-15deg; }
+    .confetti .b { top:13%; right:12%; font-size:40px; --tilt:12deg; }
+    .confetti .c { top:23%; left:17%; font-size:19px; }
+    .confetti .d { top:28%; right:5%; font-size:29px; --tilt:-10deg; }
+    .confetti .e { top:46%; left:3%; font-size:18px; --tilt:15deg; }
+    .confetti .f { top:52%; right:3%; font-size:20px; }
+    .confetti .g { bottom:26%; left:7%; font-size:30px; --tilt:-12deg; }
+    .confetti .h { bottom:23%; right:10%; font-size:34px; --tilt:12deg; }
+    .confetti .i { bottom:13%; left:20%; font-size:22px; }
+    .confetti .j { bottom:12%; right:22%; font-size:22px; --tilt:15deg; }
+    .confetti .k { top:19%; right:30%; font-size:14px; }
+    .confetti .l { bottom:7%; right:6%; font-size:17px; }
     main { padding:0 20px calc(30px + env(safe-area-inset-bottom)); background-color:var(--purple); background-image:radial-gradient(#ffffff55 1px, transparent 1px); background-size:12px 12px; }
     .page { max-width:490px; margin:0 auto; }
-    .hero { min-height:100svh; padding:44px 0 26px; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; }
+    .hero { position:relative; min-height:100svh; padding:44px 0 26px; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; }
+    .hero > :not(.confetti) { position:relative; z-index:1; }
+    .hero .confetti { inset:0 -16px; }
     .pixel-box { border:var(--edge); box-shadow:4px 4px 0 var(--ink); }
-    .mail-banner { display:inline-block; background:var(--yellow); padding:12px 15px; font-weight:bold; font-size:15px; transform:rotate(-2deg); text-decoration:none; }
+    .mail-banner { display:inline-block; background:var(--yellow); padding:12px 15px; font-weight:bold; font-size:20px; transform:rotate(-2deg); text-decoration:none; }
     .club-title { position:relative; width:100%; margin:26px 0 10px; font-family:Impact,'Arial Black',sans-serif; font-weight:900; line-height:.95; letter-spacing:-2px; -webkit-text-stroke:3px var(--ink); paint-order:stroke fill; text-shadow:3px 3px 0 var(--ink),5px 5px 0 var(--ink); }
     .club-title span { display:block; }
     .club-title .jade { color:var(--pink); font-size:clamp(65px,21vw,105px); }
     .club-title .print { color:var(--yellow); font-size:clamp(43px,13.6vw,68px); margin-top:8px; }
-    .hero-caption { font-size:12px; font-weight:bold; margin:12px 0 0; letter-spacing:1px; }
     .envelope-button { display:block; position:relative; width:100%; max-width:365px; padding:0; border:0; background:none; margin:18px 0 10px; scroll-margin-top:20px; }
     .envelope-button svg { display:block; width:100%; height:auto; overflow:visible; }
     .envelope-button .art { transition:transform .6s ease; transform-origin:190px 180px; }
     .envelope-button[aria-expanded="true"] .art { transform:translateY(-16px) rotate(3deg); }
     .envelope-button:active { transform:translateY(2px); }
-    .tap-hint { font-size:12px; margin:0 0 14px; }
-    .love-note { background:var(--paper); padding:18px; margin:3px 0 22px; transform:rotate(-1deg); line-height:1.6; font-size:14px; }
+    .love-note { background:var(--paper); padding:18px; margin:3px 0 22px; transform:rotate(-1deg); line-height:1.5; font-size:18px; }
     .love-note p { margin:0; }.love-note strong { display:block; color:#a32368; }
     [hidden] { display:none !important; }
-    .more { margin-top:auto; padding:14px 6px; min-height:48px; font-size:12px; font-weight:bold; text-decoration:none; }
+    .more { margin:20px 0 0; width:100%; font-size:clamp(22px,6.5vw,30px); line-height:1.15; font-weight:bold; }
+    .more a { display:block; padding:14px 6px; text-decoration:none; }
+    .more .scroll-label { display:block; font-size:16px; margin-bottom:8px; }
+    .more .down-arrow { display:block; font-size:40px; margin-top:8px; color:#a32368; }
     .details { padding:24px 0 12px; scroll-margin-top:20px; }
     .ticker-shell { background:var(--yellow); overflow:hidden; }
-    .ticker { display:flex; width:max-content; animation:news-scroll 100s linear infinite; padding:14px 0; }
+    .ticker-shell + .ticker-shell { margin-top:12px; background:#ffbbdd; transform:rotate(-1deg); }
+    .ticker { display:flex; width:max-content; animation:news-scroll 32s linear infinite; padding:14px 0; }
+    .ticker-shell + .ticker-shell .ticker { animation-duration:28s; }
     .ticker-group { display:flex; flex-shrink:0; white-space:nowrap; }
     .headline { padding:0 22px; font-size:13px; font-weight:bold; }
     .headline::before { content:'★'; margin-right:22px; }
     @keyframes news-scroll { to { transform:translateX(-50%); } }
-    .ticker-shell.paused .ticker { animation-play-state:paused; }
+    .news-reels.paused .ticker { animation-play-state:paused; }
     .ticker-controls { display:flex; justify-content:space-between; align-items:center; font-size:10px; margin:6px 0 20px; }
     .pause-news { padding:10px 4px; min-height:44px; background:none; border:0; text-decoration:underline; font-size:11px; }
     .girlfriend { background:var(--pink); text-align:center; padding:24px 12px 20px; transform:rotate(-1deg); }
-    .eyebrow { font-size:13px; font-weight:bold; letter-spacing:1px; margin:0; }
+    .eyebrow { font-size:17px; font-weight:bold; letter-spacing:1px; margin:0; }
     .girlfriend h2 { font-family:Impact,'Arial Black',sans-serif; font-size:55px; letter-spacing:2px; margin:10px 0 4px; }
     .girlfriend h2::before,.girlfriend h2::after { content:'♡'; font:35px 'Courier New',monospace; margin:0 14px; vertical-align:middle; }
     .girlfriend p:last-child { font-size:12px; margin:0; }
     .stats { display:flex; align-items:center; justify-content:space-between; gap:12px; background:var(--yellow); padding:16px 18px; margin:25px 0; }
-    .stats dt { font-size:13px; font-weight:bold; }.stats dd { font-size:34px; font-weight:bold; margin:0; }
+    .stats dt { max-width:12ch; font-size:clamp(18px,5.2vw,24px); line-height:1.2; font-weight:bold; }.stats dd { font-size:52px; font-weight:bold; margin:0; }
     .guestbook { background:var(--paper); }
     .guestbook h2 { text-align:center; background:#ecd9ff; margin:0; padding:15px 8px; border-bottom:var(--edge); font-size:20px; letter-spacing:2px; }
     .guestbook h2 span { color:#bd3b82; }
@@ -77,12 +96,12 @@
     footer a { display:inline-block; padding:12px; }
     .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
     @media(min-width:700px) { main { padding-top:20px; }.hero { min-height:800px; }.intro { min-height:700px; }.domain { padding:14px 25px; } }
-    @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; }.ticker { animation:none; }.envelope-button .art { transition:none; } }
+    @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; }.ticker { animation:none; width:auto; }.ticker-group { display:block; white-space:normal; }.ticker-group[aria-hidden="true"] { display:none; }.headline { display:block; padding:10px 14px; }.headline::before { margin-right:10px; }.envelope-button .art { transition:none; } }
   </style>
 </head>
 <body>
   <section class="intro" id="top" aria-label="A surprise for Jade">
-    <span class="spark one" aria-hidden="true">✦</span><span class="spark two" aria-hidden="true">✦</span><span class="spark three" aria-hidden="true">✦</span>
+    <div class="confetti" aria-hidden="true"><span class="a">★</span><span class="b">♡</span><span class="c">✦</span><span class="d">★</span><span class="e">♥</span><span class="f">✦</span><span class="g">♡</span><span class="h">★</span><span class="i">✦</span><span class="j">♥</span><span class="k">✧</span><span class="l">♡</span></div>
     <div class="intro-copy">
       <span class="intro-star" aria-hidden="true">★</span>
       <h1><span>That's right,</span><span>Shawty —</span><span>you now own</span></h1>
@@ -93,9 +112,9 @@
   <main id="club">
     <div class="page">
       <section class="hero" aria-labelledby="club-title">
+        <div class="confetti" aria-hidden="true"><span class="a">♡</span><span class="b">★</span><span class="c">✦</span><span class="d">♡</span><span class="e">★</span><span class="f">♥</span><span class="g">✦</span><span class="h">♡</span><span class="i">★</span><span class="j">✧</span><span class="k">♥</span><span class="l">★</span></div>
         <a class="mail-banner pixel-box" href="#envelope">You've Got Mail!</a>
         <h2 class="club-title" id="club-title"><span class="jade">JADE'S</span><span class="print">PRINT CLUB</span></h2>
-        <p class="hero-caption">ART PRINTS · HAPPY MAIL · GOOD TIMES</p>
         <button class="envelope-button" id="envelope" type="button" aria-label="Open your anniversary mail" aria-expanded="false" aria-controls="love-note">
           <svg viewBox="0 0 380 340" role="img" aria-labelledby="envelope-title">
             <title id="envelope-title">A pink envelope with a flower print tucked inside</title>
@@ -132,23 +151,28 @@
             <text x="271" y="323" font-family="Courier New,monospace" font-size="12" font-weight="bold" fill="#21182b" transform="rotate(-5 271 323)">for Jade ♡</text>
           </svg>
         </button>
-        <p class="tap-hint" id="tap-hint">↑ tap to open your mail</p>
         <div class="love-note pixel-box" id="love-note" hidden><p><strong>Happy six months, Shawty. ♡</strong>A little corner of the internet, just for you.<br>Love, Ed x</p></div>
-        <a class="more" href="#important">MORE EXTREMELY IMPORTANT STUFF ↓</a>
+        <h2 class="more"><a href="#important"><span class="scroll-label">scroll for more</span>EXTREMELY<br>IMPORTANT STUFF<span class="down-arrow" aria-hidden="true">↓</span></a></h2>
       </section>
       <section class="details" id="important" aria-label="Extremely important Jade information">
-        <div class="ticker-shell pixel-box" id="ticker-shell">
+        <div class="news-reels" id="ticker-shell">
+        <div class="ticker-shell pixel-box">
           <div class="ticker" aria-hidden="true"><div class="ticker-group" id="headlines">
             <span class="headline">BREAKING NEWS: LOCAL GIRL EXTREMELY CUTE</span>
-            <span class="headline">AUTHORITIES DISCOVER WHATSAPP STICKER HOARD IN SOUTHWARK</span>
             <span class="headline">SIX-MONTH INVESTIGATION CONFIRMS: STILL FANCY YOU</span>
-            <span class="headline">GIRLFRIEND OF THE MONTH WINS FOR SIXTH CONSECUTIVE MONTH</span>
             <span class="headline">BOYFRIEND DENIES WRITING ALL GUESTBOOK ENTRIES</span>
-            <span class="headline">LOCAL COUPLE COMMUNICATE ENTIRELY THROUGH STICKERS</span>
             <span class="headline">SCIENTISTS UNABLE TO EXPLAIN HOW YOU KEEP GETTING CUTER</span>
-            <span class="headline">LOCAL MAN BUYS DOMAIN; CLAIMS THIS COUNTS AS ROMANCE</span>
             <span class="headline">NATION BRACES FOR ANOTHER EXCELLENT JADE OUTFIT</span>
           </div></div>
+        </div>
+        <div class="ticker-shell pixel-box">
+          <div class="ticker" aria-hidden="true"><div class="ticker-group" id="headlines-two">
+            <span class="headline">AUTHORITIES DISCOVER WHATSAPP STICKER HOARD IN SOUTHWARK</span>
+            <span class="headline">GIRLFRIEND OF THE MONTH WINS FOR SIXTH CONSECUTIVE MONTH</span>
+            <span class="headline">LOCAL COUPLE COMMUNICATE ENTIRELY THROUGH STICKERS</span>
+            <span class="headline">LOCAL MAN BUYS DOMAIN; CLAIMS THIS COUNTS AS ROMANCE</span>
+          </div></div>
+        </div>
         </div>
         <div class="ticker-controls"><span>THE JADE NEWS NETWORK</span><button class="pause-news" type="button" id="pause-news" aria-pressed="false" hidden>pause news Ⅱ</button></div>
         <div class="sr-only" id="accessible-news"><h2>Jade news headlines</h2></div>
@@ -177,19 +201,20 @@
       envelope.setAttribute('aria-expanded', String(open));
       envelope.setAttribute('aria-label', open ? 'Close your anniversary mail' : 'Open your anniversary mail');
       document.getElementById('love-note').hidden = !open;
-      document.getElementById('tap-hint').textContent = open ? 'a special delivery, just for you ♡' : '↑ tap to open your mail';
     });
-    const headlines = document.getElementById('headlines');
     const newsList = document.createElement('ul');
-    for (const headline of headlines.children) {
-      const item = document.createElement('li');
-      item.textContent = headline.textContent;
-      newsList.appendChild(item);
+    for (const headlines of document.querySelectorAll('.ticker-group')) {
+      for (const headline of headlines.children) {
+        const item = document.createElement('li');
+        item.textContent = headline.textContent;
+        newsList.appendChild(item);
+      }
+      const duplicate = headlines.cloneNode(true);
+      duplicate.removeAttribute('id');
+      duplicate.setAttribute('aria-hidden', 'true');
+      headlines.parentElement.appendChild(duplicate);
     }
     document.getElementById('accessible-news').appendChild(newsList);
-    const duplicate = headlines.cloneNode(true);
-    duplicate.removeAttribute('id');
-    headlines.parentElement.appendChild(duplicate);
     const pauseButton = document.getElementById('pause-news');
     pauseButton.hidden = false;
     pauseButton.addEventListener('click', () => {
